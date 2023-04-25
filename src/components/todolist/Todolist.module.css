@@ -1,0 +1,45 @@
+
+.todolistCard {
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+}
+
+.todolistTitle {
+
+}
+
+.newTaskInput {
+
+}
+
+.addTaskButton {
+
+}
+
+.tasksList {
+    margin: 16px 0 16px 0;
+    padding: 0;
+}
+
+.tasksListItem {
+    list-style-type: none;
+    display: flex;
+    justify-content: space-between;
+}
+
+.taskCheckbox {
+
+}
+
+.taskTitle {
+
+}
+
+.deleteTaskButton {
+
+}
+
+.activeFilterButton {
+    background-color: green;
+}
