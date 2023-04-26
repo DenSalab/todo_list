@@ -5,8 +5,17 @@
     padding: 16px;
 }
 
+.todolistTitleWrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
 .todolistTitle {
 
+}
+
+.deleteTodolistButton {
+    align-self: center;
 }
 
 .inputBox {

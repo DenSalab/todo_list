@@ -7,10 +7,11 @@ interface ITodolist {
   title: string
   tasks: Array<TaskType>
   removeTask: (todoId: string, taskId: string) => void
-  changeFilter: (filter: FilterType) => void
   filter: FilterType
+  changeFilter: (todoId: string, filter: FilterType) => void
   addTask: (todoId: string, title: string) => void
   changeTaskStatus: (todoId: string, taskId: string, isDone: boolean) => void
+  removeTodolist: (todoId: string) => void
 }
 
 const Todolist: React.FC<ITodolist> = (
@@ -19,10 +20,11 @@ const Todolist: React.FC<ITodolist> = (
     title,
     tasks,
     removeTask,
-    changeFilter,
     filter,
+    changeFilter,
     addTask,
-    changeTaskStatus
+    changeTaskStatus,
+    removeTodolist
   }
 ) => {
   const [newTaskTitle, setNewTaskTitle] = useState('');
@@ -48,9 +50,22 @@ const Todolist: React.FC<ITodolist> = (
       addTaskHandler();
     }
   }
+
+  const removeTodolistHandler = () => {
+    removeTodolist(todoId);
+  }
   return (
     <div className={styles.todolistCard}>
-      <h3 className={styles.todolistTitle}>{title}</h3>
+      <div className={styles.todolistTitleWrapper}>
+        <h3 className={styles.todolistTitle}>{title}</h3>
+        <button
+          className={styles.deleteTodolistButton}
+          onClick={removeTodolistHandler}
+        >
+          x
+        </button>
+      </div>
+
       <div className={styles.tasksWrapper}>
         <div className={styles.inputBox}>
           <input
@@ -100,19 +115,19 @@ const Todolist: React.FC<ITodolist> = (
         <div>
           <button
             className={filter === 'all' ? styles.activeFilterButton : undefined}
-            onClick={() => changeFilter('all')}
+            onClick={() => changeFilter(todoId, 'all')}
           >
             All
           </button>
           <button
             className={filter === 'active' ? styles.activeFilterButton : undefined}
-            onClick={() => changeFilter('active')}
+            onClick={() => changeFilter(todoId, 'active')}
           >
             Active
           </button>
           <button
             className={filter === 'completed' ? styles.activeFilterButton : undefined}
-            onClick={() => changeFilter('completed')}
+            onClick={() => changeFilter(todoId, 'completed')}
           >
             Completed
           </button>
