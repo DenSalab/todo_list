@@ -41,6 +41,11 @@ function App() {
       ...tasks, [todoId]: tasks[todoId].map(task => task.id === taskId ? {...task, isDone} : task)
     });
   }
+  const changeTaskTitle = (todoId: string, taskId: string, title: string) => {
+    setTasks({
+      ...tasks, [todoId]: tasks[todoId].map(task => task.id === taskId ? {...task, title} : task)
+    });
+  }
 
   const changeFilter = (todoId: string, filter: FilterType) => {
     setTodoLists([
@@ -69,6 +74,12 @@ function App() {
     })
   }
 
+  const changeTodolistTitle = (todoId: string, title: string) => {
+    setTodoLists([
+      ...todoLists.map(todoList => todoList.id === todoId ? {...todoList, title} : todoList)
+    ])
+  }
+
   return (
     <div className="App">
       <AddItemForm onPressButton={addTodoList}/>
@@ -95,6 +106,8 @@ function App() {
               filter={todolist.filter}
               changeFilter={changeFilter}
               removeTodolist={removeTodolist}
+              changeTaskTitle={changeTaskTitle}
+              changeTodolistTitle={changeTodolistTitle}
             />
           )
         })

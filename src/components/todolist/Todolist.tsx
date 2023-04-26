@@ -2,6 +2,7 @@ import React from 'react';
 import {FilterType, TaskType} from "../../App";
 import styles from './Todolist.module.css'
 import AddItemForm from "../addItemForm/AddItemForm";
+import EditableSpan from "../editableSpan/EditableSpan";
 
 interface ITodolist {
   todoId: string
@@ -13,6 +14,8 @@ interface ITodolist {
   addTask: (todoId: string, title: string) => void
   changeTaskStatus: (todoId: string, taskId: string, isDone: boolean) => void
   removeTodolist: (todoId: string) => void
+  changeTaskTitle: (todoId: string, taskId: string, title: string) => void
+  changeTodolistTitle: (todoId: string, title: string) => void
 }
 
 const Todolist: React.FC<ITodolist> = (
@@ -25,7 +28,9 @@ const Todolist: React.FC<ITodolist> = (
     changeFilter,
     addTask,
     changeTaskStatus,
-    removeTodolist
+    removeTodolist,
+    changeTaskTitle,
+    changeTodolistTitle
   }
 ) => {
   const addNewTask = (title: string) => {
@@ -35,10 +40,17 @@ const Todolist: React.FC<ITodolist> = (
   const removeTodolistHandler = () => {
     removeTodolist(todoId);
   }
+
+  const changeTodolistTitleHandler = (title: string) => {
+    changeTodolistTitle(todoId, title);
+  }
+
   return (
     <div className={styles.todolistCard}>
       <div className={styles.todolistTitleWrapper}>
-        <h3 className={styles.todolistTitle}>{title}</h3>
+        <h3 className={styles.todolistTitle}>
+          <EditableSpan title={title} changeTitle={changeTodolistTitleHandler}/>
+        </h3>
         <button
           className={styles.deleteTodolistButton}
           onClick={removeTodolistHandler}
@@ -59,6 +71,10 @@ const Todolist: React.FC<ITodolist> = (
               const changeTaskStatusHandler = () => {
                 changeTaskStatus(todoId, task.id, !task.isDone);
               }
+              const changeTaskTitleHandler = (title: string) => {
+                changeTaskTitle(todoId, task.id, title);
+              }
+
               return (
                 <li key={task.id} className={`${styles.tasksListItem} ${task.isDone && styles.isDone}`}>
                   <div>
@@ -68,7 +84,7 @@ const Todolist: React.FC<ITodolist> = (
                       checked={task.isDone}
                       onChange={changeTaskStatusHandler}
                     />
-                    <span className={styles.taskTitle}>{task.title}</span>
+                    <EditableSpan title={task.title} changeTitle={changeTaskTitleHandler}/>
                   </div>
                   <button
                     className={styles.deleteTaskButton}
