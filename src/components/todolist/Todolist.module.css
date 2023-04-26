@@ -9,8 +9,21 @@
 
 }
 
+.inputBox {
+}
+
 .newTaskInput {
 
+}
+
+.error {
+    border: 1px solid red;
+    outline: none;
+    margin-right: 16px;
+}
+
+.errorMessage {
+    color: red;
 }
 
 .addTaskButton {
@@ -42,4 +55,8 @@
 
 .activeFilterButton {
     background-color: green;
+}
+
+.isDone {
+    opacity: .5;
 }

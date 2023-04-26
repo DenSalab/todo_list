@@ -10,6 +10,7 @@ interface ITodolist {
   changeFilter: (filter: FilterType) => void
   filter: FilterType
   addTask: (todoId: string, title: string) => void
+  changeTaskStatus: (todoId: string, taskId: string, isDone: boolean) => void
 }
 
 const Todolist: React.FC<ITodolist> = (
@@ -20,18 +21,24 @@ const Todolist: React.FC<ITodolist> = (
     removeTask,
     changeFilter,
     filter,
-    addTask
+    addTask,
+    changeTaskStatus
   }
 ) => {
   const [newTaskTitle, setNewTaskTitle] = useState('');
+  const [error, setError] = useState('');
 
   const onChangeNewTaskTitle = (e: ChangeEvent<HTMLInputElement>) => {
     setNewTaskTitle(e.currentTarget.value);
+    setError('');
   }
 
   const addTaskHandler = () => {
     if (newTaskTitle.trim()) {
+      setError('')
       addTask(todoId, newTaskTitle.trim());
+    } else {
+      setError('Field is required!');
     }
     setNewTaskTitle('');
   }
@@ -45,28 +52,37 @@ const Todolist: React.FC<ITodolist> = (
     <div className={styles.todolistCard}>
       <h3 className={styles.todolistTitle}>{title}</h3>
       <div className={styles.tasksWrapper}>
-        <input
-          className={styles.newTaskInput}
-          value={newTaskTitle}
-          onChange={onChangeNewTaskTitle}
-          onKeyDown={onKeyDownHandler}
-        />
-        <button className={styles.addTaskButton} onClick={addTaskHandler}>add</button>
+        <div className={styles.inputBox}>
+          <input
+            className={`${styles.newTaskInput} ${error && styles.error}`}
+            value={newTaskTitle}
+            onChange={onChangeNewTaskTitle}
+            onKeyDown={onKeyDownHandler}
+          />
+          <button className={styles.addTaskButton} onClick={addTaskHandler}>add</button>
+        </div>
+        {
+          error && (
+            <span className={styles.errorMessage}>Field is required!</span>
+          )
+        }
         <ul className={styles.tasksList}>
           {
             tasks.map((task) => {
               const removeTaskHandler = () => {
                 removeTask(todoId, task.id)
               }
+              const changeTaskStatusHandler = () => {
+                changeTaskStatus(todoId, task.id, !task.isDone);
+              }
               return (
-                <li key={task.id} className={styles.tasksListItem}>
+                <li key={task.id} className={`${styles.tasksListItem} ${task.isDone && styles.isDone}`}>
                   <div>
                     <input
                       className={styles.taskCheckbox}
                       type={'checkbox'}
                       checked={task.isDone}
-                      onChange={() => {
-                      }}
+                      onChange={changeTaskStatusHandler}
                     />
                     <span className={styles.taskTitle}>{task.title}</span>
                   </div>
