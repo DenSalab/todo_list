@@ -18,27 +18,6 @@
     align-self: center;
 }
 
-.inputBox {
-}
-
-.newTaskInput {
-
-}
-
-.error {
-    border: 1px solid red;
-    outline: none;
-    margin-right: 16px;
-}
-
-.errorMessage {
-    color: red;
-}
-
-.addTaskButton {
-
-}
-
 .tasksList {
     margin: 16px 0 16px 0;
     padding: 0;

@@ -1,6 +1,7 @@
-import React, {ChangeEvent, useState, KeyboardEvent} from 'react';
+import React from 'react';
 import {FilterType, TaskType} from "../../App";
 import styles from './Todolist.module.css'
+import AddItemForm from "../addItemForm/AddItemForm";
 
 interface ITodolist {
   todoId: string
@@ -27,28 +28,8 @@ const Todolist: React.FC<ITodolist> = (
     removeTodolist
   }
 ) => {
-  const [newTaskTitle, setNewTaskTitle] = useState('');
-  const [error, setError] = useState('');
-
-  const onChangeNewTaskTitle = (e: ChangeEvent<HTMLInputElement>) => {
-    setNewTaskTitle(e.currentTarget.value);
-    setError('');
-  }
-
-  const addTaskHandler = () => {
-    if (newTaskTitle.trim()) {
-      setError('')
-      addTask(todoId, newTaskTitle.trim());
-    } else {
-      setError('Field is required!');
-    }
-    setNewTaskTitle('');
-  }
-
-  const onKeyDownHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      addTaskHandler();
-    }
+  const addNewTask = (title: string) => {
+    addTask(todoId, title);
   }
 
   const removeTodolistHandler = () => {
@@ -67,20 +48,8 @@ const Todolist: React.FC<ITodolist> = (
       </div>
 
       <div className={styles.tasksWrapper}>
-        <div className={styles.inputBox}>
-          <input
-            className={`${styles.newTaskInput} ${error && styles.error}`}
-            value={newTaskTitle}
-            onChange={onChangeNewTaskTitle}
-            onKeyDown={onKeyDownHandler}
-          />
-          <button className={styles.addTaskButton} onClick={addTaskHandler}>add</button>
-        </div>
-        {
-          error && (
-            <span className={styles.errorMessage}>Field is required!</span>
-          )
-        }
+        <AddItemForm onPressButton={addNewTask}/>
+
         <ul className={styles.tasksList}>
           {
             tasks.map((task) => {

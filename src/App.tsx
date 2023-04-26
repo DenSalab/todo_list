@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import './App.css';
 import Todolist from "./components/todolist/Todolist";
 import {v1} from 'uuid';
+import AddItemForm from "./components/addItemForm/AddItemForm";
 
 function App() {
 
@@ -58,8 +59,20 @@ function App() {
     })
   }
 
+  const addTodoList = (title: string) => {
+    const todolistId = v1();
+    const newTodolist: TodolistType = {id: todolistId, title, filter: 'all'};
+    setTodoLists([newTodolist, ...todoLists]);
+    setTasks({
+      ...tasks,
+      [todolistId]: []
+    })
+  }
+
   return (
     <div className="App">
+      <AddItemForm onPressButton={addTodoList}/>
+
       {
         todoLists.map(todolist => {
           let filteredTasks = tasks[todolist.id];
