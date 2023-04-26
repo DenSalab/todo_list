@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {ChangeEvent, useState, KeyboardEvent} from 'react';
 import {FilterType, TaskType} from "../../App";
 import styles from './Todolist.module.css'
 
@@ -9,6 +9,7 @@ interface ITodolist {
   removeTask: (todoId: string, taskId: string) => void
   changeFilter: (filter: FilterType) => void
   filter: FilterType
+  addTask: (todoId: string, title: string) => void
 }
 
 const Todolist: React.FC<ITodolist> = (
@@ -18,18 +19,45 @@ const Todolist: React.FC<ITodolist> = (
     tasks,
     removeTask,
     changeFilter,
-    filter
+    filter,
+    addTask
   }
 ) => {
+  const [newTaskTitle, setNewTaskTitle] = useState('');
+
+  const onChangeNewTaskTitle = (e: ChangeEvent<HTMLInputElement>) => {
+    setNewTaskTitle(e.currentTarget.value);
+  }
+
+  const addTaskHandler = () => {
+    if (newTaskTitle.trim()) {
+      addTask(todoId, newTaskTitle.trim());
+    }
+    setNewTaskTitle('');
+  }
+
+  const onKeyDownHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      addTaskHandler();
+    }
+  }
   return (
     <div className={styles.todolistCard}>
       <h3 className={styles.todolistTitle}>{title}</h3>
       <div className={styles.tasksWrapper}>
-        <input className={styles.newTaskInput} type="text"/>
-        <button className={styles.addTaskButton}>add</button>
+        <input
+          className={styles.newTaskInput}
+          value={newTaskTitle}
+          onChange={onChangeNewTaskTitle}
+          onKeyDown={onKeyDownHandler}
+        />
+        <button className={styles.addTaskButton} onClick={addTaskHandler}>add</button>
         <ul className={styles.tasksList}>
           {
             tasks.map((task) => {
+              const removeTaskHandler = () => {
+                removeTask(todoId, task.id)
+              }
               return (
                 <li key={task.id} className={styles.tasksListItem}>
                   <div>
@@ -44,7 +72,7 @@ const Todolist: React.FC<ITodolist> = (
                   </div>
                   <button
                     className={styles.deleteTaskButton}
-                    onClick={() => removeTask(todoId, task.id)}
+                    onClick={removeTaskHandler}
                   >
                     x
                   </button>
