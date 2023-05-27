@@ -1,13 +1,16 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import styles from "./AddItemForm.module.css";
+import {Box, Button, TextField} from "@mui/material";
 
 interface IAddItemForm {
   onPressButton: (value: string) => void
+  label: string
 }
 
 const AddItemForm: React.FC<IAddItemForm> = (
   {
-    onPressButton
+    onPressButton,
+    label
   }
 ) => {
   const [value, setValue] = useState('');
@@ -29,6 +32,7 @@ const AddItemForm: React.FC<IAddItemForm> = (
 
   const onKeyDownHandler = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
+      e.preventDefault();
       addTaskHandler();
     }
   }
@@ -36,13 +40,33 @@ const AddItemForm: React.FC<IAddItemForm> = (
   return (
     <div className={styles.container}>
       <div className={styles.inputBox}>
-        <input
-          className={`${styles.newTaskInput} ${error && styles.error}`}
-          value={value}
-          onChange={onChangeHandler}
-          onKeyDown={onKeyDownHandler}
-        />
-        <button className={styles.addTaskButton} onClick={addTaskHandler}>add</button>
+        <Box
+          component="form"
+          sx={{
+            '& > :not(style)': {m: 1},
+          }}
+          autoComplete="off"
+          className={styles.inputBox}
+        >
+          <TextField
+            className={`${styles.newTaskInput} ${error && styles.error}`}
+            value={value}
+            onChange={onChangeHandler}
+            onKeyDown={onKeyDownHandler}
+            variant={"outlined"}
+            size={"small"}
+            label={label}
+            margin={"dense"}
+          />
+          <Button
+            className={styles.addTaskButton}
+            variant="contained"
+            size={"small"}
+            onClick={addTaskHandler}
+          >
+            add
+          </Button>
+        </Box>
       </div>
       {error && <span className={styles.errorMessage}>{error}</span>}
     </div>

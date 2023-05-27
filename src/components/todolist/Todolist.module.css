@@ -1,13 +1,13 @@
 
 .todolistCard {
-    background-color: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 16px;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 16px;
 }
 
 .todolistTitleWrapper {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 .todolistTitle {
@@ -15,18 +15,18 @@
 }
 
 .deleteTodolistButton {
-    align-self: center;
+  align-self: center;
 }
 
 .tasksList {
-    margin: 16px 0 16px 0;
-    padding: 0;
+  margin: 16px 0 16px 0;
+  padding: 0;
 }
 
 .tasksListItem {
-    list-style-type: none;
-    display: flex;
-    justify-content: space-between;
+  list-style-type: none;
+  display: flex;
+  justify-content: space-between;
 }
 
 .taskCheckbox {
@@ -38,9 +38,13 @@
 }
 
 .activeFilterButton {
-    background-color: green;
+  /*background-color: green;*/
 }
 
 .isDone {
-    opacity: .5;
+  opacity: .5;
+}
+
+.tasksWrapper {
+  /*background-color: red;*/
 }

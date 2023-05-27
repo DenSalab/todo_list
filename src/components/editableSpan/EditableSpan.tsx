@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useState, KeyboardEvent} from 'react';
-import styles from './EditableSpan.module.css';
+import {TextField, Typography} from "@mui/material";
 
 interface IEditableSpan {
   title: string
@@ -34,20 +34,18 @@ const EditableSpan: React.FC<IEditableSpan> = (
     <>
       {
         editMode ? (
-          <input
+          <TextField
             autoFocus
             onBlur={setTitle}
             value={value}
             onChange={onChangeHandler}
             onKeyDown={onKewDownHandler}
+            variant="standard"
           />
         ) : (
-          <span
-            className={styles.taskTitle}
-            onDoubleClick={() => setEditMode(true)}
-          >
+          <Typography variant={'h6'} onDoubleClick={() => setEditMode(true)}>
             {title}
-          </span>
+          </Typography>
         )
       }
     </>

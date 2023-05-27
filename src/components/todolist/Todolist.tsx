@@ -3,6 +3,20 @@ import {FilterType, TaskType} from "../../App";
 import styles from './Todolist.module.css'
 import AddItemForm from "../addItemForm/AddItemForm";
 import EditableSpan from "../editableSpan/EditableSpan";
+import {
+  Button,
+  ButtonGroup,
+  Card,
+  CardActions,
+  CardContent,
+  Checkbox,
+  Collapse,
+  IconButton,
+  List, ListItem, ListItemIcon, ListItemText
+} from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
+import {TransitionGroup} from 'react-transition-group';
+
 
 interface ITodolist {
   todoId: string
@@ -45,80 +59,105 @@ const Todolist: React.FC<ITodolist> = (
     changeTodolistTitle(todoId, title);
   }
 
+  interface RenderItemOptions {
+    item: TaskType;
+    removeTaskHandler: (todoId: string, taskId: string) => void;
+  }
+
+  const changeTaskStatusHandler = (todoId: string, taskId: string, isDone: boolean) => {
+    changeTaskStatus(todoId, taskId, isDone);
+  }
+
+  const removeTaskHandler = (todoId: string, taskId: string): void => {
+    removeTask(todoId, taskId)
+  }
+
+  function renderItem({item, removeTaskHandler}: RenderItemOptions) {
+    return (
+      <ListItem
+        secondaryAction={
+          <IconButton
+            edge="end"
+            aria-label="delete"
+            title="Delete"
+            onClick={() => removeTaskHandler(todoId, item.id)}
+          >
+            <DeleteIcon/>
+          </IconButton>
+        }
+      >
+        <ListItemIcon>
+          <Checkbox
+            edge="start"
+            checked={item.isDone}
+            tabIndex={-1}
+            disableRipple
+            onChange={() => changeTaskStatusHandler(todoId, item.id, !item.isDone)}
+            // inputProps={{ 'aria-labelledby': labelId }}
+          />
+        </ListItemIcon>
+        <ListItemText primary={item.title}/>
+      </ListItem>
+    );
+  }
+
   return (
-    <div className={styles.todolistCard}>
-      <div className={styles.todolistTitleWrapper}>
-        <h3 className={styles.todolistTitle}>
+    <Card variant="elevation" elevation={5} style={{padding: 8}}>
+      <CardContent>
+        <div className={styles.todolistTitleWrapper}>
+
           <EditableSpan title={title} changeTitle={changeTodolistTitleHandler}/>
-        </h3>
-        <button
-          className={styles.deleteTodolistButton}
-          onClick={removeTodolistHandler}
+
+          <IconButton
+            className={styles.deleteTodolistButton}
+            onClick={removeTodolistHandler}
+            color={"error"}
+          >
+            <DeleteIcon/>
+          </IconButton>
+        </div>
+
+        <div className={styles.tasksWrapper}>
+          <AddItemForm onPressButton={addNewTask} label={"Add task"}/>
+
+          <List>
+            <TransitionGroup>
+              {tasks.map((item) => (
+                <Collapse key={item.id}>
+                  {renderItem({item, removeTaskHandler})}
+                </Collapse>
+              ))}
+            </TransitionGroup>
+          </List>
+        </div>
+      </CardContent>
+
+      <CardActions style={{}}>
+        <ButtonGroup
+          size={"small"} fullWidth={true} variant="contained" aria-label="outlined primary button group"
+          style={{justifyContent: 'space-between'}}
         >
-          x
-        </button>
-      </div>
-
-      <div className={styles.tasksWrapper}>
-        <AddItemForm onPressButton={addNewTask}/>
-
-        <ul className={styles.tasksList}>
-          {
-            tasks.map((task) => {
-              const removeTaskHandler = () => {
-                removeTask(todoId, task.id)
-              }
-              const changeTaskStatusHandler = () => {
-                changeTaskStatus(todoId, task.id, !task.isDone);
-              }
-              const changeTaskTitleHandler = (title: string) => {
-                changeTaskTitle(todoId, task.id, title);
-              }
-
-              return (
-                <li key={task.id} className={`${styles.tasksListItem} ${task.isDone && styles.isDone}`}>
-                  <div>
-                    <input
-                      className={styles.taskCheckbox}
-                      type={'checkbox'}
-                      checked={task.isDone}
-                      onChange={changeTaskStatusHandler}
-                    />
-                    <EditableSpan title={task.title} changeTitle={changeTaskTitleHandler}/>
-                  </div>
-                  <button
-                    className={styles.deleteTaskButton}
-                    onClick={removeTaskHandler}
-                  >
-                    x
-                  </button>
-                </li>
-              )
-            })
-          }
-        </ul>
-        <div>
-          <button
-            className={filter === 'all' ? styles.activeFilterButton : undefined}
+          <Button
+            variant={filter === 'all' ? "contained" : "outlined"}
             onClick={() => changeFilter(todoId, 'all')}
           >
             All
-          </button>
-          <button
-            className={filter === 'active' ? styles.activeFilterButton : undefined}
+          </Button>
+          <Button
+            variant={filter === 'active' ? "contained" : "outlined"}
             onClick={() => changeFilter(todoId, 'active')}
           >
             Active
-          </button>
-          <button
-            className={filter === 'completed' ? styles.activeFilterButton : undefined}
+          </Button>
+          <Button
+            variant={filter === 'completed' ? "contained" : "outlined"}
             onClick={() => changeFilter(todoId, 'completed')}
           >
             Completed
-          </button>
-        </div>
-      </div>
-    </div>
+          </Button>
+        </ButtonGroup>
+      </CardActions>
+    </Card>
   );
 };
 
